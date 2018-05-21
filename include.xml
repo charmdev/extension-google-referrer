@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<ndll name="extension_google_referrer" />
+	
+	<!-- Use the following for an Android Java extension, not needed otherwise -->
+	
+	<dependency name="extension_google_referrer" path="dependencies/android" if="android" />
+	<android extension="org.haxe.extension.Extension_google_referrer" />
+	
+</project>
