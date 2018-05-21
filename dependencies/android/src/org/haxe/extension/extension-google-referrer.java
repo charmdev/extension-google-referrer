@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.net.Uri;
+import android.util.Log;
 
 
 /* 
@@ -37,10 +39,14 @@ import android.view.View;
 	back to Haxe from Java.
 */
 public class Extension_google_referrer extends Extension {
-	
+
+	static final String TAG = "GOOGLE-REF-EXTENSION";
+	static InstallReferrerClient mReferrerClient;
 	
 	public static int sampleMethod (int inputValue) {
-		
+
+		Log.d(TAG, "test alert with param: " + inputValue);
+
 		return inputValue * 100;
 		
 	}
@@ -62,8 +68,38 @@ public class Extension_google_referrer extends Extension {
 	 * Called when the activity is starting.
 	 */
 	public void onCreate (Bundle savedInstanceState) {
-		
-		
+
+		mReferrerClient = InstallReferrerClient.newBuilder(this).build();
+		mReferrerClient.startConnection(new InstallReferrerStateListener() {
+			@Override
+			public void onInstallReferrerSetupFinished(int responseCode) {
+				switch (responseCode) {
+					case InstallReferrerResponse.OK:
+
+						Log.d(TAG, "Connected");
+
+						ReferrerDetails response = mReferrerClient.getInstallReferrer();
+
+						Log.d(TAG, "ReferrerDetails: " + response.getInstallReferrer() + ", " + response.getReferrerClickTimestampSeconds() + ", " + response.getInstallBeginTimestampSeconds());
+
+						mReferrerClient.endConnection();
+
+						break;
+					case InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
+						Log.d(TAG, "Not Supported");
+						break;
+					case InstallReferrerResponse.SERVICE_UNAVAILABLE:
+						Log.d(TAG, "Service Unavailable");
+						break;
+				}
+			}
+
+			@Override
+			public void onInstallReferrerServiceDisconnected() {
+				// Try to restart the connection on the next request to
+				// Google Play by calling the startConnection() method.
+			}
+		});
 		
 	}
 	

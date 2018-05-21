@@ -1,4 +1,4 @@
-package;
+package extension.android;
 
 #if cpp
 import cpp.Lib;
@@ -11,7 +11,7 @@ import openfl.utils.JNI;
 #end
 
 
-class Extension_google_referrer {
+class GoogleReferrer {
 	
 	
 	public static function sampleMethod (inputValue:Int):Int {
