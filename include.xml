@@ -6,6 +6,6 @@
 	<!-- Use the following for an Android Java extension, not needed otherwise -->
 	
 	<dependency name="googlereferrer" path="dependencies/android" if="android" />
-	<android extension="org.haxe.extension.Extension_google_referrer" />
+	<android extension="org.haxe.extension.GoogleReferrer" />
 	
 </project>
