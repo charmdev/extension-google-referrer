@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.view.View;
 import android.net.Uri;
 import android.util.Log;
@@ -53,22 +54,29 @@ public class GoogleReferrer extends Extension {
 			public void onInstallReferrerSetupFinished(int responseCode) {
 				switch (responseCode) {
 					case InstallReferrerResponse.OK:
+						try {
 
-						Log.d(TAG, "Connected");
+							Log.d(TAG, "Connected");
 
-						ReferrerDetails response = mReferrerClient.getInstallReferrer();
+							ReferrerDetails response = mReferrerClient.getInstallReferrer();
 
-						Log.d(TAG, "ReferrerDetails: " + response.getInstallReferrer() + ", " + response.getReferrerClickTimestampSeconds() + ", " + response.getInstallBeginTimestampSeconds());
+							Log.d(TAG, "ReferrerDetails: " + response.getInstallReferrer() + ", " + response.getReferrerClickTimestampSeconds() + ", " + response.getInstallBeginTimestampSeconds());
 
-						mReferrerClient.endConnection();
+							mReferrerClient.endConnection();
 
+						} catch (RemoteException e) {
+							e.printStackTrace();
+						}
 						break;
+
 					case InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
 						Log.d(TAG, "Not Supported");
 						break;
+
 					case InstallReferrerResponse.SERVICE_UNAVAILABLE:
 						Log.d(TAG, "Service Unavailable");
 						break;
+
 				}
 			}
 
