@@ -11,6 +11,7 @@ import android.os.RemoteException;
 import android.view.View;
 import android.net.Uri;
 import android.util.Log;
+import org.haxe.lime.HaxeObject;
 
 import com.android.installreferrer.api.InstallReferrerStateListener;
 import com.android.installreferrer.api.InstallReferrerClient;
@@ -19,15 +20,17 @@ import com.android.installreferrer.api.InstallReferrerClient.InstallReferrerResp
 
 public class GoogleReferrer extends Extension {
 
-	static final String TAG = "GOOGLE-REF-EXTENSION";
+	static final String TAG = "GOOGLE-REFERRER-EXTENSION";
 	static InstallReferrerClient mReferrerClient;
+	static HaxeObject callbackObj = null;
+	static ReferrerDetails mResponse = null;
 	
-	public static int sampleMethod (int inputValue) {
+	public static void addCallback(HaxeObject callbackObj) {
 
-		Log.d(TAG, "test alert with param: " + inputValue);
+		GoogleReferrer.callbackObj = callbackObj;
 
-		return inputValue * 100;
-		
+		if (GoogleReferrer.mResponse != null)
+			successCallback(GoogleReferrer.mResponse);
 	}
 	
 	
@@ -64,17 +67,24 @@ public class GoogleReferrer extends Extension {
 
 							mReferrerClient.endConnection();
 
+							GoogleReferrer.mResponse = response;
+
+							successCallback(response);
+
 						} catch (RemoteException e) {
+							errorCallback(e.toString());
 							e.printStackTrace();
 						}
 						break;
 
 					case InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
 						Log.d(TAG, "Not Supported");
+						errorCallback(TAG + " is not supported");
 						break;
 
 					case InstallReferrerResponse.SERVICE_UNAVAILABLE:
 						Log.d(TAG, "Service Unavailable");
+						errorCallback(TAG + " service unavailable");
 						break;
 
 				}
@@ -87,6 +97,18 @@ public class GoogleReferrer extends Extension {
 			}
 		});
 		
+	}
+
+	private static void successCallback(ReferrerDetails response)
+	{
+		if (GoogleReferrer.callbackObj != null)
+			GoogleReferrer.callbackObj.call3("onSuccess_jni", response.getInstallReferrer(), response.getReferrerClickTimestampSeconds(), response.getInstallBeginTimestampSeconds());
+	}
+
+	private static void errorCallback(String errMsg)
+	{
+		if (GoogleReferrer.callbackObj != null)
+			GoogleReferrer.callbackObj.call1("onError_jni", errMsg);
 	}
 	
 	
