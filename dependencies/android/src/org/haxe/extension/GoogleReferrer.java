@@ -41,7 +41,7 @@ public class GoogleReferrer extends Extension {
 	 */
 	public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
 		
-		return true;
+		return false;
 		
 	}
 	

@@ -28,9 +28,9 @@ class GoogleReferrer {
 
 	#elseif (android && openfl)
 
-		public static var onSuccess_jni:Dynamic;
-		public static var onError_jni:String -> Void;
-		private static var extension_google_referrer_addCallback_jni = JNI.createStaticMethod ("org.haxe.extension.Extension_google_referrer", "addCallback", "(ILorg/haxe/lime/HaxeObject;)V");
+		public var onSuccess_jni:String -> Int -> Int -> Void;
+		public var onError_jni:String -> Void;
+		private static var extension_google_referrer_addCallback_jni = JNI.createStaticMethod ("org.haxe.extension.GoogleReferrer", "addCallback", "(Lorg/haxe/lime/HaxeObject;)V");
 
 	#end
 
@@ -51,8 +51,8 @@ class GoogleReferrer {
 		
 		#if (android && openfl)
 		
-		onSuccess_jni = onSuccessWrapper.bind(onSuccess);
-		onError_jni = onError;
+		getInstance().onSuccess_jni = onSuccessWrapper.bind(onSuccess);
+		getInstance().onError_jni = onError;
 		extension_google_referrer_addCallback_jni(getInstance());
 		
 		#else
@@ -65,9 +65,7 @@ class GoogleReferrer {
 
 	private static function onSuccessWrapper(onSuccess:ReferrerDetails -> Void, referrerURL:String, installTs:Int, clickTs:Int):Void
 	{
-		onSuccess(cast {referrerURL:referrerURL, beginInstallTS:installTs, beginClickTS:clickTs});
+		var result = {referrerURL:referrerURL, beginInstallTS:installTs, beginClickTS:clickTs};
+		onSuccess(result);
 	}
-
-	
-	
 }
