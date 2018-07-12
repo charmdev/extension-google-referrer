@@ -58,20 +58,16 @@ public class GoogleReferrer extends Extension {
 				switch (responseCode) {
 					case InstallReferrerResponse.OK:
 						try {
-
 							Log.d(TAG, "Connected");
-
 							ReferrerDetails response = mReferrerClient.getInstallReferrer();
-
 							Log.d(TAG, "ReferrerDetails: " + response.getInstallReferrer() + ", " + response.getReferrerClickTimestampSeconds() + ", " + response.getInstallBeginTimestampSeconds());
-
 							mReferrerClient.endConnection();
-
 							GoogleReferrer.mResponse = response;
-
 							successCallback(response);
-
 						} catch (RemoteException e) {
+							errorCallback(e.toString());
+							e.printStackTrace();
+						} catch (IllegalStateException e) {
 							errorCallback(e.toString());
 							e.printStackTrace();
 						}
