@@ -1,9 +1,7 @@
 buildscript {
     repositories {
-		mavenCentral()
-        maven {
-            url "http://repo1.maven.org/maven2/"
-        }
+		google()
+		jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0'
@@ -25,7 +23,7 @@ android {
 
 dependencies {
     repositories {
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
+        google()
     }
     compile project(':deps:extension-api')
     implementation 'com.android.installreferrer:installreferrer:1.0'
