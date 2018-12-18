@@ -28,5 +28,5 @@ dependencies {
         maven { url 'https://dl.google.com/dl/android/maven2/' }
     }
     compile project(':deps:extension-api')
-    compile 'com.android.installreferrer:installreferrer:1.0'
+    implementation 'com.android.installreferrer:installreferrer:1.0'
 }
