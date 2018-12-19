@@ -25,6 +25,6 @@ dependencies {
     repositories {
         google()
     }
-    compile project(':deps:extension-api')
+    api project(':deps:extension-api')
     implementation 'com.android.installreferrer:installreferrer:1.0'
 }
